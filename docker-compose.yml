@@ -1,7 +1,9 @@
 version: '3'
 services:
-  web:
+  node-app:
     build: .
     ports:
       - "3000:3000"
+    image: node-app:${BUILD_NUMBER}
+    container_name: node-app_${BUILD_NUMBER}
     
