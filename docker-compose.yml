@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: dockerfile
-  image: node-app
-  container: node-app-container
-  ports:
-    - "3000:3000"
+    image: node-app
+    container: node-app-container
+    ports:
+      - "3000:3000"
