@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                checkout([$class: 'GitSCM',
+                            branches: [[name: '*/main']], 
+                            userRemoteConfigs: [[credentialsId: 'github-pat-',
+                            url: 'https://github.com/rehmanjaffar/nodeapp.git']]])
+                }
+            }
+        }
+        
+        stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    // Bring down the previous deployment
+                    sh "docker-compose -f docker-compose.yml down -v"
+
+                    // Update the docker-compose.yml file with the new image tag
+                    //def buildNumber = env.BUILD_NUMBER 
+
+                    sh " sed -i 's/image: node-app:.*/image: node-app:${BUILD_NUMBER}/' docker-compose.yml"
+                    // Bring up the latest deployment
+                    sh "docker-compose -f docker-compose.yml up -d"
+                }
+            }
+        }
+    }
+}
